@@ -1,4 +1,4 @@
-﻿package org.example.plandevelop.plan.domain;
+package org.example.plandevelop.plan.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

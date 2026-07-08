@@ -1,4 +1,4 @@
-﻿package org.example.plandevelop.user.domain.dto;
+package org.example.plandevelop.user.domain.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 public class UserCreateRequestDto {
     private String username;
     private String email;
+    private String password;
 }
 

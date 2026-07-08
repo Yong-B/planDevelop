@@ -1,4 +1,4 @@
-﻿package org.example.plandevelop.user.service;
+package org.example.plandevelop.user.service;
 
 
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class UserService {
 
     @Transactional
     public UserResponseDto createUser(UserCreateRequestDto requestDto) {
-        User user = new User(requestDto.getUsername(), requestDto.getEmail());
+        User user = new User(requestDto.getUsername(), requestDto.getEmail(), requestDto.getPassword());
         return new UserResponseDto(userRepository.save(user));
     }
 
