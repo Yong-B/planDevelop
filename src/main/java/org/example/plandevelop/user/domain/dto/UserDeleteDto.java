@@ -1,4 +1,4 @@
-﻿package org.example.plandevelop.user.domain.dto;
+package org.example.plandevelop.user.domain.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

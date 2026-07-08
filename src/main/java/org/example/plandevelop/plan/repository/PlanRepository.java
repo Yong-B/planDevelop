@@ -1,4 +1,4 @@
-﻿package org.example.plandevelop.plan.repository;
+package org.example.plandevelop.plan.repository;
 
 import org.example.plandevelop.plan.domain.Plan;
 import org.springframework.data.jpa.repository.JpaRepository;
