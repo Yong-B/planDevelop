@@ -2,6 +2,7 @@ package org.example.plandevelop.user.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.plandevelop.user.domain.dto.*;
 import org.example.plandevelop.user.service.UserService;
@@ -20,7 +21,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponseDto> createUser(
-            @RequestBody UserCreateRequestDto requestDto
+            @Valid @RequestBody UserCreateRequestDto requestDto
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(requestDto));
     }
