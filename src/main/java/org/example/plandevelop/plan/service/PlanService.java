@@ -1,6 +1,7 @@
 package org.example.plandevelop.plan.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.plandevelop.exception.ServiceException;
 import org.example.plandevelop.plan.domain.Plan;
 import org.example.plandevelop.plan.domain.dto.PlanCreateRequestDto;
 import org.example.plandevelop.plan.domain.dto.PlanDeleteDto;
@@ -9,6 +10,7 @@ import org.example.plandevelop.plan.domain.dto.PlanUpdateDto;
 import org.example.plandevelop.plan.repository.PlanRepository;
 import org.example.plandevelop.user.domain.User;
 import org.example.plandevelop.user.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,9 +23,9 @@ public class PlanService {
     private final UserRepository userRepository;
 
     @Transactional
-    public PlanResponseDto createPlan(PlanCreateRequestDto requestDto, Long loginUserId) { 
+    public PlanResponseDto createPlan(PlanCreateRequestDto requestDto, Long loginUserId) {
         User user = userRepository.findById(loginUserId)
-                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
 
         Plan plan = new Plan(
                 requestDto.getTitle(),
@@ -49,7 +51,7 @@ public class PlanService {
     @Transactional(readOnly = true)
     public PlanResponseDto getPlan(Long planId) {
         Plan plan = planRepository.findById(planId)
-                .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, "일정을 찾을 수 없습니다."));
 
         return new PlanResponseDto(plan);
     }
@@ -57,7 +59,7 @@ public class PlanService {
     @Transactional
     public PlanResponseDto updateDto(Long id, PlanUpdateDto updateDto) {
         Plan plan = planRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, "일정을 찾을 수 없습니다."));
 
         plan.validatePassword(updateDto.getPassword());
         plan.update(updateDto.getTitle(), updateDto.getContent());
@@ -68,7 +70,7 @@ public class PlanService {
     @Transactional
     public void deletePlan(Long id, PlanDeleteDto deleteDto) {
         Plan plan = planRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, "일정을 찾을 수 없습니다."));
 
         plan.validatePassword(deleteDto.getPassword());
         planRepository.delete(plan);

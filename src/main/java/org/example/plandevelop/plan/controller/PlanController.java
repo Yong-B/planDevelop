@@ -2,6 +2,7 @@ package org.example.plandevelop.plan.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.plandevelop.plan.domain.dto.PlanCreateRequestDto;
 import org.example.plandevelop.plan.domain.dto.PlanDeleteDto;
@@ -22,7 +23,7 @@ public class PlanController {
 
     @PostMapping
     public ResponseEntity<PlanResponseDto> createPlan(
-            @RequestBody PlanCreateRequestDto requestDto,
+           @Valid @RequestBody PlanCreateRequestDto requestDto,
             HttpServletRequest request 
     ) {
         HttpSession session = request.getSession(false);
