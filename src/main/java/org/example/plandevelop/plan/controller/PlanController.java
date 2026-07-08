@@ -1,5 +1,7 @@
 package org.example.plandevelop.plan.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.plandevelop.plan.domain.dto.PlanCreateRequestDto;
 import org.example.plandevelop.plan.domain.dto.PlanDeleteDto;
@@ -20,9 +22,16 @@ public class PlanController {
 
     @PostMapping
     public ResponseEntity<PlanResponseDto> createPlan(
-            @RequestBody PlanCreateRequestDto requestDto
+            @RequestBody PlanCreateRequestDto requestDto,
+            HttpServletRequest request 
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(planService.createPlan(requestDto));
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("LOGIN_USER") == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Long loginUserId = (Long) session.getAttribute("LOGIN_USER");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(planService.createPlan(requestDto, loginUserId));
     }
 
     @GetMapping

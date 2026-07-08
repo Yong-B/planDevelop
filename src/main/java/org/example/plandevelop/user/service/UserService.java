@@ -3,10 +3,7 @@ package org.example.plandevelop.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.plandevelop.user.domain.User;
-import org.example.plandevelop.user.domain.dto.UserCreateRequestDto;
-import org.example.plandevelop.user.domain.dto.UserDeleteDto;
-import org.example.plandevelop.user.domain.dto.UserResponseDto;
-import org.example.plandevelop.user.domain.dto.UserUpdateDto;
+import org.example.plandevelop.user.domain.dto.*;
 import org.example.plandevelop.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,5 +50,14 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
         userRepository.delete(user);
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponseDto login(UserLoginRequestDto requestDto) {
+        User user = userRepository.findByEmail(requestDto.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다."));
+
+        user.validatePassword(requestDto.getPassword());
+        return new UserResponseDto(user);
     }
 }

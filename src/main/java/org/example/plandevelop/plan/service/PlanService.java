@@ -21,8 +21,8 @@ public class PlanService {
     private final UserRepository userRepository;
 
     @Transactional
-    public PlanResponseDto createPlan(PlanCreateRequestDto requestDto) {
-        User user = userRepository.findById(requestDto.getUserId())
+    public PlanResponseDto createPlan(PlanCreateRequestDto requestDto, Long loginUserId) { 
+        User user = userRepository.findById(loginUserId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
         Plan plan = new Plan(
