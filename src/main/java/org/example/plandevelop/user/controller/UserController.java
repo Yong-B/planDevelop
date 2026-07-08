@@ -1,10 +1,9 @@
 package org.example.plandevelop.user.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.example.plandevelop.user.domain.dto.UserCreateRequestDto;
-import org.example.plandevelop.user.domain.dto.UserDeleteDto;
-import org.example.plandevelop.user.domain.dto.UserResponseDto;
-import org.example.plandevelop.user.domain.dto.UserUpdateDto;
+import org.example.plandevelop.user.domain.dto.*;
 import org.example.plandevelop.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,5 +50,17 @@ public class UserController {
     ) {
         userService.deleteUser(id, deleteDto);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserResponseDto> login(
+            @RequestBody UserLoginRequestDto requestDto,
+            HttpServletRequest request 
+    ) {
+        UserResponseDto responseDto = userService.login(requestDto);
+        HttpSession session = request.getSession(true); 
+        session.setAttribute("LOGIN_USER", responseDto.getId());
+
+        return ResponseEntity.ok(responseDto);
     }
 }
