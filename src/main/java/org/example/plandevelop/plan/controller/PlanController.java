@@ -10,6 +10,10 @@ import org.example.plandevelop.plan.domain.dto.PlanDeleteDto;
 import org.example.plandevelop.plan.domain.dto.PlanResponseDto;
 import org.example.plandevelop.plan.domain.dto.PlanUpdateDto;
 import org.example.plandevelop.plan.service.PlanService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,10 +41,13 @@ public class PlanController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PlanResponseDto>> getPlans(
-            @RequestParam(required = false) Long userId
+    public ResponseEntity<Page<PlanResponseDto>> getPlans(
+            @RequestParam(required = false) Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
-        return ResponseEntity.ok(planService.getPlans(userId));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "modifiedAt"));
+        return ResponseEntity.ok(planService.getPlans(userId, pageable));
     }
 
     @GetMapping("/{id}")
