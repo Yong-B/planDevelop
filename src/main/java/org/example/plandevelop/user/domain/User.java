@@ -48,16 +48,4 @@ public class User {
         this.username = username;
         this.email = email;
     }
-
-    public void validatePassword(String password) {
-        if (!this.password.equals(password)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-    }
-
-    private void validatePasswordLength(String password) {
-        if (password == null || password.length() < 8) {
-            throw new IllegalArgumentException("비밀번호는 8글자 이상이어야 합니다.");
-        }
-    }
 }
