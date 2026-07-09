@@ -21,14 +21,9 @@
 | **댓글 생성** | `POST` | `/api/plans/{planId}/comments` | `201 Created` |
 | **댓글 전체 조회** | `GET` | `/api/plans/{planId}/comments` | `200 OK` |
 
-## 📌 API 테스트 및 검증
 
-이전 리뷰에서 "Postman Collection이나 Swagger 설정을 함께 제공하면 검증 근거를 더 명확히 남길 수 있다"는 피드백을 받아, Swagger(springdoc-openapi)를 적용했습니다.
+<img width="1477" height="1043" alt="image" src="https://github.com/user-attachments/assets/3c20854e-a9fe-4bcd-95c0-2a9e79786579" />
 
-- 의존성: `springdoc-openapi-starter-webmvc-ui`
-- 실행 후 접속: `http://localhost:8080/swagger-ui/index.html`
-- 모든 API의 요청/응답 스펙이 자동 문서화되며, 화면에서 직접 요청을 보내 응답을 즉시 확인할 수 있습니다.
-- 로그인(Cookie/Session) 후 인증이 필요한 API(일정 생성, 댓글 생성 등)도 브라우저 세션이 유지되는 상태에서 바로 테스트 가능합니다.
 
 ## 📌 ERD
 <img width="334" height="700" alt="image" src="https://github.com/user-attachments/assets/e6790763-25db-4837-a1bd-8465b356dfd7" />
