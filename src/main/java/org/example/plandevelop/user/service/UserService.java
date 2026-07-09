@@ -1,6 +1,7 @@
 package org.example.plandevelop.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.plandevelop.PasswordEncoder;
 import org.example.plandevelop.exception.ServiceException;
 import org.example.plandevelop.user.domain.User;
 import org.example.plandevelop.user.domain.dto.*;
@@ -16,13 +17,16 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserResponseDto createUser(UserCreateRequestDto requestDto) {
         if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
             throw new ServiceException(HttpStatus.CONFLICT, "이미 가입된 이메일입니다.");
         }
-        User user = new User(requestDto.getUsername(), requestDto.getEmail(), requestDto.getPassword());
+        
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+        User user = new User(requestDto.getUsername(), requestDto.getEmail(), encodedPassword);  // encodedPassword로 수정
         return new UserResponseDto(userRepository.save(user));
     }
 
@@ -53,7 +57,10 @@ public class UserService {
     public void deleteUser(Long id, UserDeleteDto deleteDto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
-        user.validatePassword(deleteDto.getPassword());
+
+        if (!passwordEncoder.matches(deleteDto.getPassword(), user.getPassword())) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
+        }
         userRepository.delete(user);
     }
 
@@ -62,7 +69,9 @@ public class UserService {
         User user = userRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, "이메일 또는 비밀번호가 올바르지 않습니다."));
 
-        user.validatePassword(requestDto.getPassword());
+        if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, "이메일 또는 비밀번호가 올바르지 않습니다.");
+        }
         return new UserResponseDto(user);
     }
 }
