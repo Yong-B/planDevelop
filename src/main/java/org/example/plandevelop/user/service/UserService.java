@@ -19,6 +19,9 @@ public class UserService {
 
     @Transactional
     public UserResponseDto createUser(UserCreateRequestDto requestDto) {
+        if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
+            throw new ServiceException(HttpStatus.CONFLICT, "이미 가입된 이메일입니다.");
+        }
         User user = new User(requestDto.getUsername(), requestDto.getEmail(), requestDto.getPassword());
         return new UserResponseDto(userRepository.save(user));
     }
@@ -50,6 +53,7 @@ public class UserService {
     public void deleteUser(Long id, UserDeleteDto deleteDto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."));
+        user.validatePassword(deleteDto.getPassword());
         userRepository.delete(user);
     }
 

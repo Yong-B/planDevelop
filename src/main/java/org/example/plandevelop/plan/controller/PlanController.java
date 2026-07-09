@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.plandevelop.exception.ServiceException;
 import org.example.plandevelop.plan.domain.dto.PlanCreateRequestDto;
 import org.example.plandevelop.plan.domain.dto.PlanDeleteDto;
 import org.example.plandevelop.plan.domain.dto.PlanResponseDto;
@@ -28,7 +29,7 @@ public class PlanController {
     ) {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("LOGIN_USER") == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            throw new ServiceException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
         }
         Long loginUserId = (Long) session.getAttribute("LOGIN_USER");
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -63,4 +64,6 @@ public class PlanController {
         planService.deletePlan(id, deleteDto);
         return ResponseEntity.noContent().build();
     }
+    
+    
 }
